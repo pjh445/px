@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국방부 PX인기상품(샘플)</title>
+    <style>
+        h1 {text-align:center;}
+        table {
+            width:100%;
+            max-width:1200px;
+            margin:30px auto;
+        }
+        table, th, td {
+            border: 1px solid #666;
+            border-collapse: collapse;
+        }       
+        th {
+            padding:10px;  background:#ddd;
+        }
+        td {padding:7px 0px 7px 10px;}
+        td:nth-child(1) {width:37%;}
+        td:nth-child(2) {width:10%;}
+        a {font-size:0.85rem; color:orange; text-decoration:none;}
+        a[href*='tel'] {color:dodgerblue; text-decoration:none;}
+    </style>
+</head>
+<body>
+    <h1>국방부 PX인기상품(샘플)</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>집계년월</th>
+                <th>제품명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 정보가 여기에 추가됩니다 -->
+        </tbody>
+    </table>
+
+    <script>
+        // XML 데이터를 가져오는 함수
+        async function fetchXML() {
+            try {
+                const response = await fetch('https://openapi.mnd.go.kr/sample/xml/DS_MND_PX_PARD_PRDT_INFO/1/5/');
+                const xmlText = await response.text();
+                
+                // 응답 내용 확인
+                console.log(xmlText);
+
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+                displayData(xmlDoc);
+            } catch (error) {
+                console.error("XML 데이터를 가져오는 중 오류 발생:", error);
+            }
+        }
+
+        // XML 데이터를 HTML 테이블로 표시하는 함수
+        function displayData(xmlDoc) {
+            const tbody = document.querySelector("table tbody");
+            const rows = xmlDoc.getElementsByTagName("row");
+
+            // XML 데이터에서 각 병원 정보를 테이블에 추가
+            for (let i = 0; i < rows.length; i++) {
+                const year = rows[i].getElementsByTagName("sellyear")[0]?.textContent || 'N/A';
+                const month = rows[i].getElementsByTagName("sellmonth")[0]?.textContent || 'N/A';
+                const name = rows[i].getElementsByTagName("prdtnm")[0]?.textContent || 'N/A';
+
+                // 테이블 행을 생성하여 데이터를 채움
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${year} ${month}</td>
+                    <td><strong>${name}</strong></td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // 페이지 로드 시 XML 데이터를 가져옴
+        document.addEventListener("DOMContentLoaded", fetchXML);
+    </script>
+</body>
+</html>
