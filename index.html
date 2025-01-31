@@ -41,23 +41,22 @@
 
     <script>
         // XML 데이터를 가져오는 함수
-        async function fetchXML() {
-            try {
-                const response = await fetch('https://openapi.mnd.go.kr/sample/xml/DS_MND_PX_PARD_PRDT_INFO/1/5/');
-                const xmlText = await response.text();
-                
-                // 응답 내용 확인
-                console.log(xmlText);
+		async function fetchXML() {
+			try {
+				const response = await fetch('https://cors-anywhere.herokuapp.com/https://openapi.mnd.go.kr/sample/xml/DS_MND_PX_PARD_PRDT_INFO/1/5/');
+				const xmlText = await response.text();
+				
+				// 응답 내용 확인
+				console.log(xmlText);
 
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+				const parser = new DOMParser();
+				const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
-                displayData(xmlDoc);
-            } catch (error) {
-                console.error("XML 데이터를 가져오는 중 오류 발생:", error);
-            }
-        }
-
+				displayData(xmlDoc);
+			} catch (error) {
+				console.error("XML 데이터를 가져오는 중 오류 발생:", error);
+			}
+		}
         // XML 데이터를 HTML 테이블로 표시하는 함수
         function displayData(xmlDoc) {
             const tbody = document.querySelector("table tbody");
